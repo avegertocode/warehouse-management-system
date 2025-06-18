@@ -1,0 +1,25 @@
+<table id="requisitionsTable"></table>
+
+<script>
+async function loadData() {
+  const response = await fetch('/requisitions');
+  const data = await response.json();
+
+  const table = document.getElementById('requisitionsTable');
+  table.innerHTML = data.map(r => `
+    <tr>
+      <td>${r.item_name}</td>
+      <td>${r.quantity}</td>
+      <td>${r.status}</td>
+      <td><button onclick="approve(${r.id})">Approve</button></td>
+    </tr>
+  `).join('');
+}
+
+async function approve(id) {
+  await fetch('/approve/' + id, { method: 'POST' });
+  loadData();
+}
+
+loadData();
+</script>
